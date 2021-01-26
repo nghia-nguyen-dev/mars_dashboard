@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server/index.js",
-    "sass": "sass --watch src:dist"
+    "sass": "sass --watch src/public/styles/scss/index.scss:src/public/styles/css/index.css"
   },
   "author": "",
   "license": "ISC",

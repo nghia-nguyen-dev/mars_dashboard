@@ -1,0 +1,59 @@
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ol, ul, li {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* -------------------  MOBILE  --------------------- */
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial;
+  min-height: 100vh;
+}
+
+header {
+  /* header styles */
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+footer {
+  /* footer styles */
+}
+
+/* -------------------  TABLET  --------------------- */
+@media (min-width: 768px) {
+  /* use mobile */
+}
+/* -------------------  DESKTOP  -------------------- */
+@media (min-width: 1224px) {
+  /* use mobile */
+}
+/* -------------------  LARGE SCREENS  -------------- */
+@media (min-width: 1824px) {
+  /* use mobile */
+}
+
+/*# sourceMappingURL=index.css.map */
