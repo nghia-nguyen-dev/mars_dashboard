@@ -1,3 +1,4 @@
+// global state
 let store = {
     user: { name: "Student" },
     apod: '',
@@ -99,7 +100,10 @@ const getImageOfTheDay = (state) => {
 
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
+        .then(apod => {
+            console.log(apod);
+            updateStore(store, { apod })
+        })
 
     return data
 }

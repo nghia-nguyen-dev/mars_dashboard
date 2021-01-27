@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+// global state
 var store = {
     user: { name: "Student" },
     apod: '',
@@ -93,6 +94,9 @@ var getImageOfTheDay = function (state) {
     var apod = state.apod;
     fetch("http://localhost:3000/apod")
         .then(function (res) { return res.json(); })
-        .then(function (apod) { return updateStore(store, { apod: apod }); });
+        .then(function (apod) {
+        console.log(apod);
+        updateStore(store, { apod: apod });
+    });
     return data;
 };
