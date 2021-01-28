@@ -25,20 +25,11 @@ const App = (state) => {
     let { rovers, apod } = state
 
     return `
-        <header>
-            <h1>Mars Rovers</h1>
-            <ul class="rover">
-                <li class="rover__name" data-rover="curiosity">Curiosity</li>
-                <li class="rover__name" data-rover="opportunity">Opportunity</li>
-                <li class="rover__name" data-rover="spirit">Spirit</li>
-            </ul>
-        </header>
         <main>
             <figure>
                 ${getImageOfTheDay()}
             </figure>
         </main>
-        <footer>Footer info</footer>
     `
 }
 
