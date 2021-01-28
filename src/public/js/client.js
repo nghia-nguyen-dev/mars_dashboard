@@ -1,4 +1,6 @@
 "use strict";
+const root = document.getElementById('root');
+const rovers = document.querySelector('.rovers');
 // global state
 const store = {
     apod: '',
@@ -8,8 +10,10 @@ const store = {
         spirit: '',
     },
 };
-// add our markup to the page
-const root = document.getElementById('root');
+const cb = (e) => {
+    const rover = e.target.dataset.rover;
+};
+rovers.addEventListener('click', cb);
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState);
     // render(root, store)
@@ -72,17 +76,10 @@ const ImageOfTheDay = (apod) => {
 // ------------------------------------------------------  API CALLS
 // Example API call
 const getImageOfTheDay = async () => {
-    // fetch(`http://localhost:3000/apod`)
-    //     .then(res => res.json())
-    //     .then(apod => {
-    //         console.log(apod);
-    //         updateStore(store, apod)
-    //     })
-    debugger;
-    const res = await fetch(`http://localhost:3000/apod`);
-    const apod = await res.json();
-    updateStore(store, { apod });
-    return `
-         <img src="${store.apod.image.url}" height="350px" width="100%" />
-    `;
+    fetch(`http://localhost:3000/apod`)
+        .then(res => res.json())
+        .then(apod => {
+        console.log(apod);
+        updateStore(store, apod);
+    });
 };
