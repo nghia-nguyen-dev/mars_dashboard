@@ -16,8 +16,9 @@ app.use('/', express.static(path.join(__dirname, '../public')))
 
 // example API call
 app.post('/rover', async (req, res) => {
+    const baseURL = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=2015-6-3&api_key=DEMO_KEY`
     try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
+        const image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send({ image })
     } catch (err) {

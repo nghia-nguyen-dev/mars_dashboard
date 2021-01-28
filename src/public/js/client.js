@@ -1,7 +1,6 @@
 "use strict";
 const root = document.getElementById('root');
 const rovers = document.querySelector('.rovers');
-const baseURL = ``;
 // global state
 const store = {
     apod: '',
@@ -11,12 +10,16 @@ const store = {
         spirit: '',
     },
 };
-const getRover = (name) => {
+const getTD = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+};
+const getRover = (name, td) => {
     fetch();
 };
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
-    getRover(roverName);
+    getRover(roverName, getTD());
 };
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState);

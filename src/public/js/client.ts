@@ -1,6 +1,5 @@
 const root = document.getElementById('root');
 const rovers = document.querySelector('.rovers')
-const baseURL = ``
 
 // global state
 const store = {
@@ -12,13 +11,18 @@ const store = {
     },
 }
 
-const getRover = (name: string) => {
+const getTD = () => {
+    const d = new Date();
+	return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+}
+
+const getRover = (name: string, td) => {
     fetch()
 }
 
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
-    getRover(roverName)
+    getRover(roverName, getTD())
 }
 
 const updateStore = (store, newState) => {
