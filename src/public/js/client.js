@@ -1,6 +1,7 @@
 "use strict";
 const root = document.getElementById('root');
 const rovers = document.querySelector('.rovers');
+const baseURL = ``;
 // global state
 const store = {
     apod: '',
@@ -10,10 +11,13 @@ const store = {
         spirit: '',
     },
 };
-const cb = (e) => {
-    const rover = e.target.dataset.rover;
+const getRover = (name) => {
+    fetch();
 };
-rovers.addEventListener('click', cb);
+const cb = (e) => {
+    const roverName = e.target.dataset.rover;
+    getRover(roverName);
+};
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState);
     // render(root, store)
@@ -21,21 +25,21 @@ const updateStore = (store, newState) => {
 const render = async (root, state) => {
     root.innerHTML = App(state);
 };
-// create content
 const App = (state) => {
     let { rovers, apod } = state;
     return `
         <main>
-            <figure>
-                ${getImageOfTheDay()}
-            </figure>
+            <section>
+              
+            </section>
         </main>
     `;
 };
-// listening for load event because page should load before any JS is called
+// Listeners
 window.addEventListener('load', () => {
     render(root, store);
 });
+rovers.addEventListener('click', cb);
 // ------------------------------------------------------  COMPONENTS
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
@@ -76,7 +80,7 @@ const ImageOfTheDay = (apod) => {
 // ------------------------------------------------------  API CALLS
 // Example API call
 const getImageOfTheDay = async () => {
-    fetch(`http://localhost:3000/apod`)
+    fetch(`http://localhost:3000/rover`)
         .then(res => res.json())
         .then(apod => {
         console.log(apod);
