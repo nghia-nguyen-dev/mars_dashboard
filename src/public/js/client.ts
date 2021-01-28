@@ -16,13 +16,30 @@ const getTD = () => {
 	return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 }
 
-const getRover = (name: string, td) => {
-    fetch()
+const getRover = async (rover: string) => {
+	const options = {
+		method: "POST",
+		credentials: "same-origin",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		// Body data type must match "Content-Type" header
+		body: JSON.stringify({rover}),
+    };
+    
+    try {
+        const res = await fetch(`http://localhost:3000/rover`, options);
+        const data = await res.json();
+        console.log(data);
+    } catch(err) {
+        console.log(err);
+    }
+
 }
 
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
-    getRover(roverName, getTD())
+    getRover(roverName)
 }
 
 const updateStore = (store, newState) => {

@@ -12,11 +12,10 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 // your API calls
 // example API call
 app.post('/rover', async (req, res) => {
-    const baseURL = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=2015-6-3&api_key=DEMO_KEY`;
     try {
-        const image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
-            .then(res => res.json());
-        res.send({ image });
+        const res1 = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${req.body.rover}/latest_photos?page=1&api_key=${process.env.API_KEY}`);
+        const data = await res1.json();
+        res.send(data);
     }
     catch (err) {
         console.log('error:', err);
