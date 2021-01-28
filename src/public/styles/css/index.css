@@ -28,6 +28,8 @@ body {
   flex-direction: column;
   font-family: Arial;
   min-height: 100vh;
+  color: beige;
+  background-color: #1f1f23;
 }
 
 header {
