@@ -3,17 +3,12 @@ const root = document.getElementById('root');
 const rovers = document.querySelector('.rovers');
 // global state
 const store = {
-    apod: '',
-    rovers: {
-        curiosity: '',
-        opportunity: '',
-        spirit: '',
-    },
+    rovers: {},
 };
-const getTD = () => {
-    const d = new Date();
-    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-};
+// const getTD = () => {
+//     const d = new Date();
+// 	return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+// }
 const getRover = async (rover) => {
     const options = {
         method: "POST",
@@ -21,7 +16,6 @@ const getRover = async (rover) => {
         headers: {
             "Content-Type": "application/json",
         },
-        // Body data type must match "Content-Type" header
         body: JSON.stringify({ rover }),
     };
     try {
