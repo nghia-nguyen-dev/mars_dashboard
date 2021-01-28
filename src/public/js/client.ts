@@ -1,8 +1,11 @@
 // global state
-let store = {
-    user: { name: "Student" },
+const store = {
     apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    rovers: {
+        curiosity: '',
+        opportunity: '',
+        spirit:'',
+    },
 }
 
 // add our markup to the page
@@ -10,37 +13,32 @@ const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState)
-    render(root, store)
+    // render(root, store)
 }
 
 const render = async (root, state) => {
     root.innerHTML = App(state)
 }
 
-
 // create content
 const App = (state) => {
     let { rovers, apod } = state
 
     return `
-        <header></header>
+        <header>
+            <h1>Mars Rovers</h1>
+            <ul class="rover">
+                <li class="rover__name" data-rover="curiosity">Curiosity</li>
+                <li class="rover__name" data-rover="opportunity">Opportunity</li>
+                <li class="rover__name" data-rover="spirit">Spirit</li>
+            </ul>
+        </header>
         <main>
-            ${Greeting(store.user.name)}
-            <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${ImageOfTheDay(apod)}
-            </section>
+            <figure>
+                ${getImageOfTheDay()}
+            </figure>
         </main>
-        <footer></footer>
+        <footer>Footer info</footer>
     `
 }
 
@@ -95,15 +93,22 @@ const ImageOfTheDay = (apod) => {
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
+const getImageOfTheDay = async () => {
 
-    fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => {
-            console.log(apod);
-            updateStore(store, { apod })
-        })
+    // fetch(`http://localhost:3000/apod`)
+    //     .then(res => res.json())
+    //     .then(apod => {
+    //         console.log(apod);
+    //         updateStore(store, apod)
+    //     })
+    debugger
+    const res = await fetch(`http://localhost:3000/apod`);
+    const apod = await res.json();
+    updateStore(store, {apod})
+    
+    return `
+         <img src="${store.apod.image.url}" height="350px" width="100%" />
+    `
 
-    return data
 }
+
