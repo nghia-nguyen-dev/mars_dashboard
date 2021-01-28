@@ -11,7 +11,7 @@ const store = {
 // 	return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 // }
 
-const getRover = async (rover: string) => {
+const getRover = (rover: string) => {
 	const options = {
 		method: "POST",
 		credentials: "same-origin",
@@ -21,16 +21,19 @@ const getRover = async (rover: string) => {
 		body: JSON.stringify({rover}),	// Body data type must match "Content-Type" header
     };
     
-    try {
-        const res = await fetch(`http://localhost:3000/rover`, options);
-        const data = await res.json();
-        console.log(data);
-    }
-    catch(err) {
-        console.log(err);
-    }
-    
+    fetch(`http://localhost:3000/rover`, options)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            updateStore(store, {
+                rovers: {
+                    [rover]: data
+                }
+            })
+        })
 
+        .catch(err => console.log(err))
+    
 }
 
 const cb = (e) => {

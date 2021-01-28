@@ -9,7 +9,7 @@ const store = {
 //     const d = new Date();
 // 	return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 // }
-const getRover = async (rover) => {
+const getRover = (rover) => {
     const options = {
         method: "POST",
         credentials: "same-origin",
@@ -18,14 +18,17 @@ const getRover = async (rover) => {
         },
         body: JSON.stringify({ rover }),
     };
-    try {
-        const res = await fetch(`http://localhost:3000/rover`, options);
-        const data = await res.json();
+    fetch(`http://localhost:3000/rover`, options)
+        .then(res => res.json())
+        .then(data => {
         console.log(data);
-    }
-    catch (err) {
-        console.log(err);
-    }
+        updateStore(store, {
+            rovers: {
+                [rover]: data
+            }
+        });
+    })
+        .catch(err => console.log(err));
 };
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
