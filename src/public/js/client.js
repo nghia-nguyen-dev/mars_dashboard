@@ -5,10 +5,6 @@ const rovers = document.querySelector('.rovers');
 const store = Immutable.Map({
     rovers: {},
 });
-// const getTD = () => {
-//     const d = new Date();
-// 	return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
-// }
 const getRover = (rover) => {
     const options = {
         method: "POST",
@@ -23,9 +19,7 @@ const getRover = (rover) => {
         .then(data => {
         console.log(data);
         updateStore(store, {
-            rovers: {
-                [rover]: data
-            }
+            [rover]: data
         });
     })
         .catch(err => console.log(err));

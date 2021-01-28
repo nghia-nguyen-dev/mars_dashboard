@@ -6,10 +6,6 @@ const store = Immutable.Map({
     rovers: {},
 })
 
-// const getTD = () => {
-//     const d = new Date();
-// 	return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
-// }
 
 const getRover = (rover: string) => {
 	const options = {
@@ -26,9 +22,7 @@ const getRover = (rover: string) => {
         .then(data => {
             console.log(data);
             updateStore(store, {
-                rovers: {
-                    [rover]: data
-                }
+                [rover]: data
             })
         })
 
