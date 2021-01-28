@@ -2,9 +2,9 @@ const root = document.getElementById('root');
 const rovers = document.querySelector('.rovers')
 
 // global state
-const store = {
+const store = Immutable.Map({
     rovers: {},
-}
+})
 
 // const getTD = () => {
 //     const d = new Date();
