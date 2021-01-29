@@ -57,20 +57,15 @@ const buildImgTag = (state) => {
     }, ``); // initialize with empty string!
 };
 const buildRoverInfoTag = (state) => {
-    // Build out rover info
-    const rover = {
-        landing_date: photos[0].rover.landing_date,
-        launch_date: photos[0].rover.launch_date,
-        status: photos[0].rover.status,
-        photo_date: photos[0].earth_date,
-        name: photos[0].rover.name,
-    };
+    const active = state.active;
+    // Destructuring to pull out 1st item in the latest_photos array
+    const { rovers: { [active]: { latest_photos: [roverInfo] } } } = state;
     return `
-        <h2>${rover.name}</h2>
-        <p>Status: ${rover.status}</p>
-        <p>Date of photos: ${rover.photo_date}</p>
-        <p>Launch date: ${rover.launch_date}</p>
-        <p>Landing date: ${rover.landing_date}</p>
+        <h2>${active}</h2>
+        <p>Status: ${roverInfo.rover.status}</p>
+        <p>Date of photos: ${roverInfo.earth_date}</p>
+        <p>Launch date: ${roverInfo.rover.launch_date}</p>
+        <p>Landing date: ${roverInfo.rover.landing_date}</p>
     `;
 };
 const App = (state) => {
