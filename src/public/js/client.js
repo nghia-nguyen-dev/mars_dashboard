@@ -6,15 +6,7 @@ let store = Immutable.fromJS({
     rovers: {},
     active: ``,
 });
-const getRover = (rover) => {
-    const options = {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ rover }),
-    };
+const fetchData = (options) => {
     fetch(`http://localhost:3000/rover`, options)
         .then((res) => res.json())
         .then((data) => {
@@ -25,6 +17,17 @@ const getRover = (rover) => {
         });
     })
         .catch((err) => console.log(err));
+};
+const getRover = (rover) => {
+    const options = {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rover }),
+    };
+    fetchData(options);
 };
 const cb = (e) => {
     const roverName = e.target.dataset.rover;

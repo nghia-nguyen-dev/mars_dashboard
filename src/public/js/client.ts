@@ -21,18 +21,8 @@ interface Store {
 	active: string;
 }
 
-const getRover = (rover: string) => {
-
-	const options = {
-		method: "POST",
-		credentials: "same-origin",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({ rover }), // Body data type must match "Content-Type" header
-	};
-
-	fetch(`http://localhost:3000/rover`, options)
+const fetchData = (options):void => {
+    fetch(`http://localhost:3000/rover`, options)
 		.then((res) => res.json())
 		.then((data) => {
 			updateStore(store, {
@@ -43,6 +33,20 @@ const getRover = (rover: string) => {
 			});
 		})
 		.catch((err) => console.log(err));
+}
+
+const getRover = (rover: string):void => {
+
+	const options = {
+		method: "POST",
+		credentials: "same-origin",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ rover }), // Body data type must match "Content-Type" header
+	};
+
+	fetchData(options);
 };
 
 const cb = (e) => {
