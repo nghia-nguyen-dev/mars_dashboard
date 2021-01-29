@@ -1,6 +1,6 @@
 "use strict";
-const root = document.getElementById('root');
-const rovers = document.querySelector('.rovers');
+const root = document.getElementById("root");
+const rovers = document.querySelector(".rovers");
 // global state
 let store = Immutable.fromJS({
     rovers: {},
@@ -15,16 +15,15 @@ const getRover = (rover) => {
         body: JSON.stringify({ rover }),
     };
     fetch(`http://localhost:3000/rover`, options)
-        .then(res => res.json())
-        .then(data => {
-        console.log(data);
+        .then((res) => res.json())
+        .then((data) => {
         updateStore(store, {
             rovers: {
-                [rover]: data
-            }
+                [rover]: data,
+            },
         });
     })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
 };
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
@@ -32,14 +31,20 @@ const cb = (e) => {
 };
 const updateStore = (prevState, newState) => {
     store = prevState.merge(newState);
-    console.log(store.toJS());
-    // render(root, store)
+    render(root, store.toJS());
 };
 const render = async (root, state) => {
     root.innerHTML = App(state);
 };
 const App = (state) => {
-    let { rovers, apod } = state;
+    const { rovers: { spirit: { latest_photos: photos }, }, } = state;
+    const roverInfo = {
+        landing_date: photos[0].rover.landing_date,
+        launch_date: photos[0].rover.launch_date,
+        status: photos[0].rover.status,
+        photo_date: photos[0].earth_date,
+    };
+    console.log(roverInfo);
     return `
         <main>
             <section>
@@ -49,10 +54,10 @@ const App = (state) => {
     `;
 };
 // Listeners
-window.addEventListener('load', () => {
-    render(root, store);
+window.addEventListener("load", () => {
+    // render(root, store)
 });
-rovers.addEventListener('click', cb);
+rovers.addEventListener("click", cb);
 // ------------------------------------------------------  COMPONENTS
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
@@ -77,25 +82,25 @@ const ImageOfTheDay = (apod) => {
     }
     // check if the photo of the day is actually type video!
     if (apod.media_type === "video") {
-        return (`
+        return `
             <p>See today's featured video <a href="${apod.url}">here</a></p>
             <p>${apod.title}</p>
             <p>${apod.explanation}</p>
-        `);
+        `;
     }
     else {
-        return (`
+        return `
             <img src="${apod.image.url}" height="350px" width="100%" />
             <p>${apod.image.explanation}</p>
-        `);
+        `;
     }
 };
 // ------------------------------------------------------  API CALLS
 // Example API call
 const getImageOfTheDay = async () => {
     fetch(`http://localhost:3000/rover`)
-        .then(res => res.json())
-        .then(apod => {
+        .then((res) => res.json())
+        .then((apod) => {
         console.log(apod);
         updateStore(store, apod);
     });

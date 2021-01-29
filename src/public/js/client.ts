@@ -1,11 +1,10 @@
-const root = document.getElementById('root');
-const rovers = document.querySelector('.rovers')
+const root = document.getElementById("root");
+const rovers = document.querySelector(".rovers");
 
 // global state
 let store = Immutable.fromJS({
-    rovers: {},
-})
-
+	rovers: {},
+});
 
 const getRover = (rover: string) => {
 	const options = {
@@ -14,113 +13,117 @@ const getRover = (rover: string) => {
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({rover}),	// Body data type must match "Content-Type" header
-    };
-    
-    fetch(`http://localhost:3000/rover`, options)
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            updateStore(store, {
-                rovers: {
-                    [rover]: data
-                }
-            })
-        })
+		body: JSON.stringify({ rover }), // Body data type must match "Content-Type" header
+	};
 
-        .catch(err => console.log(err))
-    
-}
+	fetch(`http://localhost:3000/rover`, options)
+		.then((res) => res.json())
+		.then((data) => {
+			updateStore(store, {
+				rovers: {
+					[rover]: data,
+				},
+			});
+		})
+		.catch((err) => console.log(err));
+};
 
 const cb = (e) => {
-    const roverName = e.target.dataset.rover;
-    getRover(roverName)
-}
+	const roverName = e.target.dataset.rover;
+	getRover(roverName);
+};
 
 const updateStore = (prevState, newState) => {
-    store = prevState.merge(newState)
-    console.log(store.toJS());
-
-    // render(root, store)
-}
+	store = prevState.merge(newState);
+	render(root, store.toJS());
+};
 
 const render = async (root, state) => {
-    root.innerHTML = App(state)
-}
+	root.innerHTML = App(state);
+};
 
 const App = (state) => {
-    let { rovers, apod } = state
+	const {
+		rovers: {
+			spirit: { latest_photos: photos },
+		},
+	} = state;
 
-    return `
+	const roverInfo = {
+		landing_date: photos[0].rover.landing_date,
+		launch_date: photos[0].rover.launch_date,
+		status: photos[0].rover.status,
+		photo_date: photos[0].earth_date,
+	};
+
+	console.log(roverInfo);
+
+	return `
         <main>
             <section>
               
             </section>
         </main>
-    `
-}
+    `;
+};
 
 // Listeners
-window.addEventListener('load', () => {
-    render(root, store)
-})
+window.addEventListener("load", () => {
+	// render(root, store)
+});
 
-rovers.addEventListener('click', cb)
+rovers.addEventListener("click", cb);
 
 // ------------------------------------------------------  COMPONENTS
 
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
-    if (name) {
-        return `
+	if (name) {
+		return `
             <h1>Welcome, ${name}!</h1>
-        `
-    }
+        `;
+	}
 
-    return `
+	return `
         <h1>Hello!</h1>
-    `
-}
+    `;
+};
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
+	// If image does not already exist, or it is not from today -- request it again
+	const today = new Date();
+	const photodate = new Date(apod.date);
+	console.log(photodate.getDate(), today.getDate());
 
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
+	console.log(photodate.getDate() === today.getDate());
+	if (!apod || apod.date === today.getDate()) {
+		getImageOfTheDay(store);
+	}
 
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
-
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
+	// check if the photo of the day is actually type video!
+	if (apod.media_type === "video") {
+		return `
             <p>See today's featured video <a href="${apod.url}">here</a></p>
             <p>${apod.title}</p>
             <p>${apod.explanation}</p>
-        `)
-    } else {
-        return (`
+        `;
+	} else {
+		return `
             <img src="${apod.image.url}" height="350px" width="100%" />
             <p>${apod.image.explanation}</p>
-        `)
-    }
-}
+        `;
+	}
+};
 
 // ------------------------------------------------------  API CALLS
 
 // Example API call
 const getImageOfTheDay = async () => {
-
-    fetch(`http://localhost:3000/rover`)
-        .then(res => res.json())
-        .then(apod => {
-            console.log(apod);
-            updateStore(store, apod)
-        })
-
-}
-
+	fetch(`http://localhost:3000/rover`)
+		.then((res) => res.json())
+		.then((apod) => {
+			console.log(apod);
+			updateStore(store, apod);
+		});
+};
