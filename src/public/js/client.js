@@ -2,7 +2,7 @@
 const root = document.getElementById('root');
 const rovers = document.querySelector('.rovers');
 // global state
-const store = Immutable.Map({
+let store = Immutable.fromJS({
     rovers: {},
 });
 const getRover = (rover) => {
@@ -19,7 +19,9 @@ const getRover = (rover) => {
         .then(data => {
         console.log(data);
         updateStore(store, {
-            [rover]: data
+            rovers: {
+                [rover]: data
+            }
         });
     })
         .catch(err => console.log(err));
@@ -28,8 +30,9 @@ const cb = (e) => {
     const roverName = e.target.dataset.rover;
     getRover(roverName);
 };
-const updateStore = (store, newState) => {
-    store = Object.assign(store, newState);
+const updateStore = (prevState, newState) => {
+    store = prevState.merge(newState);
+    console.log(store.toJS());
     // render(root, store)
 };
 const render = async (root, state) => {
