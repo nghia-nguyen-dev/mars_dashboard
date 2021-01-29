@@ -161,15 +161,3 @@ const ImageOfTheDay = (apod) => {
         `;
 	}
 };
-
-// ------------------------------------------------------  API CALLS
-
-// Example API call
-const getImageOfTheDay = async () => {
-	fetch(`http://localhost:3000/rover`)
-		.then((res) => res.json())
-		.then((apod) => {
-			console.log(apod);
-			updateStore(store, apod);
-		});
-};
