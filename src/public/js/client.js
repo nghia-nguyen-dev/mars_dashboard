@@ -45,8 +45,8 @@ const cb = (e) => {
     }
 };
 const updateStore = (prevState, newState) => {
-    store = prevState.mergeDeep(newState);
-    render(root, store.toJS());
+    const currentState = prevState.mergeDeep(newState);
+    render(root, currentState);
 };
 const render = async (root, state) => {
     root.innerHTML = App(state);
