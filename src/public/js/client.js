@@ -31,8 +31,8 @@ const getRover = (rover) => {
 };
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
+    // Check if rover info already exist to avoid unecessary fetch
     if (store.toJS().rovers[roverName]) {
-        console.log(`already exist!`);
         render(root, store.toJS());
     }
     else {
@@ -49,7 +49,7 @@ const render = async (root, state) => {
 const buildImgTag = (photos) => {
     return photos.reduce((accumulator, currentPhoto) => {
         return accumulator + `<img src="${currentPhoto.img_src}">`;
-    }, ``);
+    }, ``); // initialize with empty string!
 };
 const buildRoverInfoTag = (rover) => {
     return `
@@ -61,7 +61,7 @@ const buildRoverInfoTag = (rover) => {
     `;
 };
 const App = (state) => {
-    // Destructure to get latest_photos array
+    // Destructure to get latest_photos as photo alias
     const { rovers: { [state.active]: { latest_photos: photos }, }, } = state;
     // Build out rover info
     const roverInfo = {
