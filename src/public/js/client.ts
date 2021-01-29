@@ -55,20 +55,21 @@ const getRover = (rover: string):void => {
 
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
-    store = store.merge({active:roverName});
+    const currentState = updateStore(store, {active: roverName})
 
-    // Check if rover info already exist to avoid unecessary fetch
-	if (store.toJS().rovers[roverName]) {
-		render(root, store.toJS());
+    // Check if rover info already exist to avoid unecessary fetching
+	if (currentState.rovers[roverName] !== null) {
+		render(root, currentState);
 	} else {
-		getRover(roverName);
+		getRover(currentState);
     }
-    
 };
 
 const updateStore = (prevState, newState) => {
 	const currentState = prevState.mergeDeep(newState);
-	render(root, currentState);
+    render(root, currentState);
+    
+    return currentState.toJS();
 };
 
 const render = async (root, state) => {
