@@ -47,7 +47,7 @@ const cb = (e) => {
 const updateStore = (prevState, newState) => {
     const currentState = prevState.mergeDeep(newState);
     render(root, currentState);
-    return currentState.toJS();
+    return currentState.toJS(); // convert back to raw JS objects
 };
 const render = async (root, state) => {
     root.innerHTML = App(state);
