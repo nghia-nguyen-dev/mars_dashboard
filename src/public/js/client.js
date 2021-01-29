@@ -52,14 +52,15 @@ const render = async (state) => {
     root.innerHTML = App(state);
 };
 const buildImgTag = (state) => {
+    // Destructuring to pull out latest_photos array
+    const { rovers: { [state.active]: { latest_photos: photos } } } = state;
     return photos.reduce((accumulator, currentPhoto) => {
         return accumulator + `<img src="${currentPhoto.img_src}">`;
-    }, ``); // initialize with empty string!
+    }, ``); // initialize with empty string!!!
 };
 const buildInfoTag = (state) => {
-    const active = state.active;
     // Destructuring to pull out 1st item in the latest_photos array
-    const { rovers: { [active]: { latest_photos: [roverInfo] } } } = state;
+    const { rovers: { [state.active]: { latest_photos: [roverInfo] } } } = state;
     return `
         <h2>${active}</h2>
         <p>Status: ${roverInfo.rover.status}</p>
