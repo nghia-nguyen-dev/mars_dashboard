@@ -4,9 +4,25 @@ const rovers = document.querySelector(".rovers");
 // global state
 let store = Immutable.fromJS({
 	rovers: {},
+	active: ``,
 });
 
+// Ts interface
+interface Rover {
+	landing_date: string;
+	launch_date: string;
+	status: string;
+	photo_date: string;
+	name: string;
+}
+
+interface Store {
+	rovers: {};
+	active: string;
+}
+
 const getRover = (rover: string) => {
+
 	const options = {
 		method: "POST",
 		credentials: "same-origin",
@@ -23,18 +39,25 @@ const getRover = (rover: string) => {
 				rovers: {
 					[rover]: data,
 				},
+				// active: rover,
 			});
 		})
 		.catch((err) => console.log(err));
 };
 
 const cb = (e) => {
+
 	const roverName = e.target.dataset.rover;
-	getRover(roverName);
+	if (store.toJS().rovers[roverName]) {
+		console.log(`already exist!`);
+		render(root, store.toJS());
+	} else {
+		getRover(roverName);
+	}
 };
 
 const updateStore = (prevState, newState) => {
-	store = prevState.merge(newState);
+	store = prevState.mergeDeep(newState);
 	render(root, store.toJS());
 };
 
@@ -42,29 +65,46 @@ const render = async (root, state) => {
 	root.innerHTML = App(state);
 };
 
-const App = (state) => {
+const buildImgTag = (photos): string => {
+	return photos.reduce((accumulator, currentPhoto) => {
+		return accumulator + `<img src="${currentPhoto.img_src}">`;
+	}, ``);
+};
+
+const buildRoverInfoTag = (rover: Rover): string => {
+	return `
+        <h2>${rover.name}</h2>
+        <p>Status: ${rover.status}</p>
+        <p>Date of photos: ${rover.photo_date}</p>
+        <p>Launch date: ${rover.launch_date}</p>
+        <p>Landing date: ${rover.landing_date}</p>
+    `;
+};
+
+const App = (state: Store): string => {
+
+    // Destructure to get latest_photos array
 	const {
 		rovers: {
-			spirit: { latest_photos: photos },
+			[state.active]: { latest_photos: photos },
 		},
 	} = state;
-
-	const roverInfo = {
+    // Build out rover info
+	const roverInfo: Rover = {
 		landing_date: photos[0].rover.landing_date,
 		launch_date: photos[0].rover.launch_date,
 		status: photos[0].rover.status,
 		photo_date: photos[0].earth_date,
+		name: photos[0].rover.name,
 	};
 
-	console.log(roverInfo);
-
 	return `
-        <main>
-            <section>
-              
-            </section>
-        </main>
+        <section>
+            ${buildRoverInfoTag(roverInfo)}
+            ${buildImgTag(photos)}
+        </section>
     `;
+
 };
 
 // Listeners
