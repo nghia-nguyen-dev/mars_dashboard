@@ -27,7 +27,7 @@ const fetchData = (options):void => {
 		.then((data) => {
 			updateStore(store, {
 				rovers: {
-					[rover]: data,
+					[store.toJS().active]: data, // FIX THIS LATER
 				},
 				// active: rover,
 			});
@@ -51,6 +51,7 @@ const getRover = (rover: string):void => {
 
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
+    store = store.merge({active:roverName});
 
     // Check if rover info already exist to avoid unecessary fetch
 	if (store.toJS().rovers[roverName]) {
@@ -76,7 +77,16 @@ const buildImgTag = (photos): string => {
 	}, ``); // initialize with empty string!
 };
 
-const buildRoverInfoTag = (rover: Rover): string => {
+const buildRoverInfoTag = (photos): string => {
+      // Build out rover info
+	const rover: Rover = {
+		landing_date: photos[0].rover.landing_date,
+		launch_date: photos[0].rover.launch_date,
+		status: photos[0].rover.status,
+		photo_date: photos[0].earth_date,
+		name: photos[0].rover.name,
+    };
+    
 	return `
         <h2>${rover.name}</h2>
         <p>Status: ${rover.status}</p>
@@ -86,27 +96,19 @@ const buildRoverInfoTag = (rover: Rover): string => {
     `;
 };
 
-const App = (state: Store): string => {
+const App = (): string => {
+    const jsStore = store.toJS() // Convert immutable object into JS
 
     // Destructure to get latest_photos as photo alias
 	const {
 		rovers: {
-			[state.active]: { latest_photos: photos },
+			[jsStore.active]: { latest_photos: photos },
 		},
-    } = state;
+    } = jsStore;
     
-    // Build out rover info
-	const roverInfo: Rover = {
-		landing_date: photos[0].rover.landing_date,
-		launch_date: photos[0].rover.launch_date,
-		status: photos[0].rover.status,
-		photo_date: photos[0].earth_date,
-		name: photos[0].rover.name,
-	};
-
 	return `
         <section>
-            ${buildRoverInfoTag(roverInfo)}
+            ${buildRoverInfoTag(photos)}
             ${buildImgTag(photos)}
         </section>
     `;

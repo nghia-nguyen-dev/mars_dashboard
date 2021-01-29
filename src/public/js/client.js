@@ -12,7 +12,7 @@ const fetchData = (options) => {
         .then((data) => {
         updateStore(store, {
             rovers: {
-                [rover]: data,
+                [store.toJS().active]: data,
             },
         });
     })
@@ -31,6 +31,7 @@ const getRover = (rover) => {
 };
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
+    store = store.merge({ active: roverName });
     // Check if rover info already exist to avoid unecessary fetch
     if (store.toJS().rovers[roverName]) {
         render(root, store.toJS());
@@ -51,7 +52,15 @@ const buildImgTag = (photos) => {
         return accumulator + `<img src="${currentPhoto.img_src}">`;
     }, ``); // initialize with empty string!
 };
-const buildRoverInfoTag = (rover) => {
+const buildRoverInfoTag = (photos) => {
+    // Build out rover info
+    const rover = {
+        landing_date: photos[0].rover.landing_date,
+        launch_date: photos[0].rover.launch_date,
+        status: photos[0].rover.status,
+        photo_date: photos[0].earth_date,
+        name: photos[0].rover.name,
+    };
     return `
         <h2>${rover.name}</h2>
         <p>Status: ${rover.status}</p>
@@ -60,20 +69,13 @@ const buildRoverInfoTag = (rover) => {
         <p>Landing date: ${rover.landing_date}</p>
     `;
 };
-const App = (state) => {
+const App = () => {
+    const jsStore = store.toJS(); // Convert immutable object into JS
     // Destructure to get latest_photos as photo alias
-    const { rovers: { [state.active]: { latest_photos: photos }, }, } = state;
-    // Build out rover info
-    const roverInfo = {
-        landing_date: photos[0].rover.landing_date,
-        launch_date: photos[0].rover.launch_date,
-        status: photos[0].rover.status,
-        photo_date: photos[0].earth_date,
-        name: photos[0].rover.name,
-    };
+    const { rovers: { [jsStore.active]: { latest_photos: photos }, }, } = jsStore;
     return `
         <section>
-            ${buildRoverInfoTag(roverInfo)}
+            ${buildRoverInfoTag(photos)}
             ${buildImgTag(photos)}
         </section>
     `;
