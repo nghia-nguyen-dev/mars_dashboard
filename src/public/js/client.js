@@ -62,7 +62,7 @@ const buildInfoTag = (state) => {
     // Destructuring to pull out 1st item in the latest_photos array
     const { rovers: { [state.active]: { latest_photos: [roverInfo] } } } = state;
     return `
-        <h2>${active}</h2>
+        <h2>${state.active}</h2>
         <p>Status: ${roverInfo.rover.status}</p>
         <p>Date of photos: ${roverInfo.earth_date}</p>
         <p>Launch date: ${roverInfo.rover.launch_date}</p>
@@ -77,7 +77,6 @@ const App = (state) => {
         }
         return accumulator;
     }, true);
-    console.log(allAreNull);
     // Check for null data
     if (allAreNull) {
         return;

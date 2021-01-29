@@ -107,7 +107,7 @@ const buildInfoTag = (state: Store): string => {
     } = state;
     
 	return `
-        <h2>${active}</h2>
+        <h2>${state.active}</h2>
         <p>Status: ${roverInfo.rover.status}</p>
         <p>Date of photos: ${roverInfo.earth_date}</p>
         <p>Launch date: ${roverInfo.rover.launch_date}</p>
@@ -116,7 +116,6 @@ const buildInfoTag = (state: Store): string => {
 };
 
 const App = (state:Store):string | undefined => {
-
     const { rovers } = state;
 
     const allAreNull = Object.values(rovers).reduce((accumulator, currentVal) => {
@@ -125,8 +124,6 @@ const App = (state:Store):string | undefined => {
         }
         return accumulator
     }, true)
-
-    console.log(allAreNull);
 
     // Check for null data
     if (allAreNull) {
