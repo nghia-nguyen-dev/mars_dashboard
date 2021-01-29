@@ -38,7 +38,7 @@ const cb = (e) => {
     const currentState = updateStore(store, { active: roverName });
     // Check if rover info already exist to avoid unecessary fetching
     if (currentState.rovers[roverName] !== null) {
-        render(root, currentState);
+        render(currentState);
     }
     else {
         getRover(currentState);
@@ -46,10 +46,10 @@ const cb = (e) => {
 };
 const updateStore = (prevState, newState) => {
     const currentState = prevState.mergeDeep(newState);
-    render(root, currentState);
+    render(currentState);
     return currentState.toJS(); // convert back to raw JS objects
 };
-const render = async (root, state) => {
+const render = async (state) => {
     root.innerHTML = App(state);
 };
 const buildImgTag = (photos) => {
