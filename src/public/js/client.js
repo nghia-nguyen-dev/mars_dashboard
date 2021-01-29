@@ -31,7 +31,6 @@ const fetchData = (state) => {
         .catch((err) => console.log(err));
 };
 const cb = (e) => {
-    console.log(e);
     const roverName = e.target.dataset.rover;
     const currentState = updateStore(store, { active: roverName });
     // Check if rover info already exist to avoid unecessary fetching
@@ -89,18 +88,6 @@ const App = (state) => {
             </section>
         `;
     }
-    // // Destructure to get latest_photos as photo alias
-    // const {
-    // 	rovers: {
-    // 		[state.active]: { latest_photos: photos },
-    // 	},
-    // } = state;
-    // return `
-    //     <section>
-    //         ${buildRoverInfoTag(photos)}
-    //         ${buildImgTag(photos)}
-    //     </section>
-    // `;
 };
 // Listeners
 window.addEventListener("load", () => {

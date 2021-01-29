@@ -53,7 +53,7 @@ const fetchData = (state:Store):void => {
 };
 
 const cb = (e):void => {
-    console.log(e);
+
     const roverName:string = e.target.dataset.rover;
     const currentState = updateStore(store, { active: roverName })
 
@@ -136,20 +136,6 @@ const App = (state:Store):string | undefined => {
             </section>
         `;
     }
-
-    // // Destructure to get latest_photos as photo alias
-	// const {
-	// 	rovers: {
-	// 		[state.active]: { latest_photos: photos },
-	// 	},
-    // } = state;
-    
-	// return `
-    //     <section>
-    //         ${buildRoverInfoTag(photos)}
-    //         ${buildImgTag(photos)}
-    //     </section>
-    // `;
 
 };
 
