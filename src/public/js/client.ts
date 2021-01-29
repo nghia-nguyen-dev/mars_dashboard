@@ -2,9 +2,13 @@ const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
 
 // global state
-let store = Immutable.fromJS({
-	rovers: {},
-	active: ``,
+const store = Immutable.fromJS({
+	rovers: {
+        curiosity: null,
+        opportunity: null,
+        spirit: null,
+    },
+	active: null,
 });
 
 // Ts interface
