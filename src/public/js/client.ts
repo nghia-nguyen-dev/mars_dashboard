@@ -104,23 +104,19 @@ const buildRoverInfoTag = (photos): string => {
 
 const App = (state:Store):string | undefined => {
 
-    console.log(state);
     const { rovers } = state;
 
-    const allNull = Object.values(rovers)
-        .reduce((acc, current) => {
-            if (current === null) {
-                acc = true;
-            } else {
-                acc = false;
-            }
-            return acc;
-        })
+    const allAreNull = Object.values(rovers).reduce((accumulator, currentVal) => {
+        if (currentVal !== null) {
+            accumulator = false;
+        }
+        return accumulator
+    }, true)
 
-    console.log(allNull);
+    console.log(allAreNull);
 
     // Check for null data
-    if (allNull) {
+    if (allAreNull) {
         return;
     } else {
         return `

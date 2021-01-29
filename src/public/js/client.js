@@ -73,21 +73,16 @@ const buildRoverInfoTag = (photos) => {
     `;
 };
 const App = (state) => {
-    console.log(state);
     const { rovers } = state;
-    const allNull = Object.values(rovers)
-        .reduce((acc, current) => {
-        if (current === null) {
-            acc = true;
+    const allAreNull = Object.values(rovers).reduce((accumulator, currentVal) => {
+        if (currentVal !== null) {
+            accumulator = false;
         }
-        else {
-            acc = false;
-        }
-        return acc;
-    });
-    console.log(allNull);
+        return accumulator;
+    }, true);
+    console.log(allAreNull);
     // Check for null data
-    if (allNull) {
+    if (allAreNull) {
         return;
     }
     else {
