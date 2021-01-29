@@ -83,7 +83,7 @@ const buildImgTag = (state: Store): string => {
 	}, ``); // initialize with empty string!
 };
 
-const buildRoverInfoTag = (state: Store): string => {
+const buildInfoTag = (state: Store): string => {
     const active = state.active
     
     // Destructuring to pull out 1st item in the latest_photos array
@@ -125,7 +125,7 @@ const App = (state:Store):string | undefined => {
     } else {
         return `
             <section>
-                ${buildRoverInfoTag(state)}
+                ${buildInfoTag(state)}
                 ${buildImgTag(state)}
             </section>
         `;

@@ -56,7 +56,7 @@ const buildImgTag = (state) => {
         return accumulator + `<img src="${currentPhoto.img_src}">`;
     }, ``); // initialize with empty string!
 };
-const buildRoverInfoTag = (state) => {
+const buildInfoTag = (state) => {
     const active = state.active;
     // Destructuring to pull out 1st item in the latest_photos array
     const { rovers: { [active]: { latest_photos: [roverInfo] } } } = state;
@@ -84,7 +84,7 @@ const App = (state) => {
     else {
         return `
             <section>
-                ${buildRoverInfoTag(state)}
+                ${buildInfoTag(state)}
                 ${buildImgTag(state)}
             </section>
         `;
