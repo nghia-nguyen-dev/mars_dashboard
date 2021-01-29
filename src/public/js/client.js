@@ -10,28 +10,25 @@ const store = Immutable.fromJS({
     },
     active: null,
 });
-const fetchData = (options) => {
-    fetch(`http://localhost:3000/rover`, options)
-        .then((res) => res.json())
-        .then((data) => {
-        updateStore(store, {
-            rovers: {
-                [store.toJS().active]: data,
-            },
-        });
-    })
-        .catch((err) => console.log(err));
-};
-const getRover = (rover) => {
+const fetchData = (state) => {
     const options = {
         method: "POST",
         credentials: "same-origin",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ rover }),
+        body: JSON.stringify(state),
     };
-    fetchData(options);
+    fetch(`http://localhost:3000/rover`, options)
+        .then((res) => res.json())
+        .then((data) => {
+        updateStore(state, {
+            rovers: {
+                [state.active]: data,
+            },
+        });
+    })
+        .catch((err) => console.log(err));
 };
 const cb = (e) => {
     const roverName = e.target.dataset.rover;
@@ -41,13 +38,14 @@ const cb = (e) => {
         render(currentState);
     }
     else {
-        getRover(currentState);
+        fetchData(currentState);
     }
 };
 const updateStore = (prevState, newState) => {
-    const currentState = prevState.mergeDeep(newState);
+    prevState = Immutable.fromJS(prevState); // convert back to Immutable
+    const currentState = prevState.mergeDeep(newState).toJS(); // convert back to raw JS objects after merge
     render(currentState);
-    return currentState.toJS(); // convert back to raw JS objects
+    return currentState;
 };
 const render = async (state) => {
     root.innerHTML = App(state);
@@ -74,16 +72,44 @@ const buildRoverInfoTag = (photos) => {
         <p>Landing date: ${rover.landing_date}</p>
     `;
 };
-const App = () => {
-    const jsStore = store.toJS(); // Convert immutable object into JS
-    // Destructure to get latest_photos as photo alias
-    const { rovers: { [jsStore.active]: { latest_photos: photos }, }, } = jsStore;
-    return `
-        <section>
-            ${buildRoverInfoTag(photos)}
-            ${buildImgTag(photos)}
-        </section>
-    `;
+const App = (state) => {
+    console.log(state);
+    const { rovers } = state;
+    const allNull = Object.values(rovers)
+        .reduce((acc, current) => {
+        if (current === null) {
+            acc = true;
+        }
+        else {
+            acc = false;
+        }
+        return acc;
+    });
+    console.log(allNull);
+    // Check for null data
+    if (allNull) {
+        return;
+    }
+    else {
+        return `
+            <section>
+                ${buildRoverInfoTag(state)}
+                ${buildImgTag(state)}
+            </section>
+        `;
+    }
+    // // Destructure to get latest_photos as photo alias
+    // const {
+    // 	rovers: {
+    // 		[state.active]: { latest_photos: photos },
+    // 	},
+    // } = state;
+    // return `
+    //     <section>
+    //         ${buildRoverInfoTag(photos)}
+    //         ${buildImgTag(photos)}
+    //     </section>
+    // `;
 };
 // Listeners
 window.addEventListener("load", () => {

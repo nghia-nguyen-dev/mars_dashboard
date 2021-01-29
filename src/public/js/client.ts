@@ -2,7 +2,7 @@ const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
 
 // global state
-const store = Immutable.fromJS({
+const store:Store = Immutable.fromJS({
 	rovers: {
         curiosity: null,
         opportunity: null,
@@ -11,7 +11,7 @@ const store = Immutable.fromJS({
 	active: null,
 });
 
-// Ts interface
+// INTERFACE
 interface Rover {
 	landing_date: string;
 	launch_date: string;
@@ -21,25 +21,15 @@ interface Rover {
 }
 
 interface Store {
-	rovers: {};
-	active: string;
+	rovers: {
+        curiosity: null | { latest_photos: []};
+        opportunity: null | { latest_photos: []};
+        spirit: null | { latest_photos: []};
+    };
+	active: null | string;
 }
 
-const fetchData = (options):void => {
-    fetch(`http://localhost:3000/rover`, options)
-		.then((res) => res.json())
-		.then((data) => {
-			updateStore(store, {
-				rovers: {
-					[store.toJS().active]: data, // FIX THIS LATER
-				},
-				// active: rover,
-			});
-		})
-		.catch((err) => console.log(err));
-}
-
-const getRover = (rover: string):void => {
+const fetchData = (state:Store):void => {
 
 	const options = {
 		method: "POST",
@@ -47,13 +37,23 @@ const getRover = (rover: string):void => {
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({ rover }), // Body data type must match "Content-Type" header
+		body: JSON.stringify(state), // Body data type must match "Content-Type" header
 	};
 
-	fetchData(options);
+    fetch(`http://localhost:3000/rover`, options)
+    .then((res) => res.json())
+    .then((data) => {
+        updateStore(state, {
+            rovers: {
+                [state.active]: data,
+            },
+        });
+    })
+    .catch((err) => console.log(err));
 };
 
 const cb = (e) => {
+ 
     const roverName = e.target.dataset.rover;
     const currentState = updateStore(store, {active: roverName})
 
@@ -61,18 +61,19 @@ const cb = (e) => {
 	if (currentState.rovers[roverName] !== null) {
 		render(currentState);
 	} else {
-		getRover(currentState);
+		fetchData(currentState);
     }
 };
 
-const updateStore = (prevState, newState) => {
-	const currentState = prevState.mergeDeep(newState);
+const updateStore = (prevState:Store, newState:Store) => {
+    prevState = Immutable.fromJS(prevState) // convert back to Immutable
+	const currentState = prevState.mergeDeep(newState).toJS(); // convert back to raw JS objects after merge
     render(currentState);
     
-    return currentState.toJS(); // convert back to raw JS objects
+    return currentState; 
 };
 
-const render = async (state) => {
+const render = async (state:Store) => {
 	root.innerHTML = App(state);
 };
 
@@ -101,22 +102,48 @@ const buildRoverInfoTag = (photos): string => {
     `;
 };
 
-const App = (): string => {
-    const jsStore = store.toJS() // Convert immutable object into JS
+const App = (state:Store):string | undefined => {
 
-    // Destructure to get latest_photos as photo alias
-	const {
-		rovers: {
-			[jsStore.active]: { latest_photos: photos },
-		},
-    } = jsStore;
+    console.log(state);
+    const { rovers } = state;
+
+    const allNull = Object.values(rovers)
+        .reduce((acc, current) => {
+            if (current === null) {
+                acc = true;
+            } else {
+                acc = false;
+            }
+            return acc;
+        })
+
+    console.log(allNull);
+
+    // Check for null data
+    if (allNull) {
+        return;
+    } else {
+        return `
+            <section>
+                ${buildRoverInfoTag(state)}
+                ${buildImgTag(state)}
+            </section>
+        `;
+    }
+
+    // // Destructure to get latest_photos as photo alias
+	// const {
+	// 	rovers: {
+	// 		[state.active]: { latest_photos: photos },
+	// 	},
+    // } = state;
     
-	return `
-        <section>
-            ${buildRoverInfoTag(photos)}
-            ${buildImgTag(photos)}
-        </section>
-    `;
+	// return `
+    //     <section>
+    //         ${buildRoverInfoTag(photos)}
+    //         ${buildImgTag(photos)}
+    //     </section>
+    // `;
 
 };
 
