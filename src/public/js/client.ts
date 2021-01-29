@@ -52,10 +52,10 @@ const fetchData = (state:Store):void => {
     .catch((err) => console.log(err));
 };
 
-const cb = (e) => {
- 
-    const roverName = e.target.dataset.rover;
-    const currentState = updateStore(store, {active: roverName})
+const cb = (e):void => {
+    console.log(e);
+    const roverName:string = e.target.dataset.rover;
+    const currentState = updateStore(store, { active: roverName })
 
     // Check if rover info already exist to avoid unecessary fetching
 	if (currentState.rovers[roverName] !== null) {
@@ -77,13 +77,13 @@ const render = async (state:Store) => {
 	root.innerHTML = App(state);
 };
 
-const buildImgTag = (photos): string => {
+const buildImgTag = (state: Store): string => {
 	return photos.reduce((accumulator, currentPhoto) => {
 		return accumulator + `<img src="${currentPhoto.img_src}">`;
 	}, ``); // initialize with empty string!
 };
 
-const buildRoverInfoTag = (photos): string => {
+const buildRoverInfoTag = (state: Store): string => {
       // Build out rover info
 	const rover: Rover = {
 		landing_date: photos[0].rover.landing_date,
