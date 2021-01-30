@@ -1,13 +1,14 @@
 "use strict";
 const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
+const { Map } = Immutable;
 // global state
-const store = Immutable.fromJS({
-    rovers: {
+const store = Map({
+    rovers: Map({
         curiosity: null,
         opportunity: null,
         spirit: null,
-    },
+    }),
     active: null,
 });
 const fetchData = (state) => {

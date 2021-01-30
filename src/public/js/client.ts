@@ -1,13 +1,14 @@
 const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
+const { Map } = Immutable;
 
 // global state
-const store:Store = Immutable.fromJS({
-	rovers: {
+const store:Store = Map({
+	rovers: Map({
         curiosity: null,
         opportunity: null,
         spirit: null,
-    },
+    }),
 	active: null,
 });
 
