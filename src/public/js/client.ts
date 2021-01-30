@@ -25,27 +25,31 @@ const fetchData = (state):void => {
     fetch(`http://localhost:3000/rover`, options)
     .then((res) => res.json())
     .then((data) => {
-        updateStore(state, {
-            rovers: {
-                [state.active]: data,
-            },
-        });
+        render(updateStore(state, {roverInfo: data, type:`SET_ROVER`}));
     })
     .catch((err) => console.log(err));
 };
 
-const cb = (e):void => {
+const cb = (e) => {
 
-    const roverName:string = e.target.dataset.rover;
-    const currentState = updateStore(store, { active: roverName })
+    const roverName = e.target.dataset.rover;
+    const state = updateStore(store, { active: roverName, type: `SET_ACTIVE` })
+
+    console.log(state.toJS());
+
+    fetchData(state)
 
     // Check if rover info already exist to avoid unecessary fetching
-	if (currentState.rovers[roverName] !== null) {
-		render(currentState);
-	} else {
-		fetchData(currentState);
-    }
+	// if (state.rovers[roverName] !== null) {
+	// 	render(state);
+	// } else {
+	// 	fetchData(state);
+    // }
 };
+
+const getPropsInMap = (state) => {
+    return 
+}
 
 const updateStore = (state, action) => {
     
