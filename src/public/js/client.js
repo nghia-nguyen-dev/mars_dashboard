@@ -72,7 +72,9 @@ const App = (state) => {
     return `
         <section>
             ${buildInfoTag(state)}
-            ${buildImgTag(state)}
+            <div class="rover-images">
+                ${buildImgTag(state)}
+            </div>
         </section>
     `;
 };
