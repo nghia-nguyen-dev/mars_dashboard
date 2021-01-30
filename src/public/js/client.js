@@ -33,11 +33,14 @@ const main = (e) => {
 };
 const updateStore = (state, action) => {
     // Both set() + setIn() returns a new MAP object
-    switch (action.type) {
-        case `SET_ACTIVE`:
-            return state.set(`active`, Immutable.fromJS(action.active));
-        case `SET_ROVER`:
-            return state.setIn([`rovers`, `${state.get(`active`)}`], Immutable.fromJS(action.roverInfo));
+    if (action.type === `SET_ACTIVE`) {
+        return state.set(`active`, Immutable.fromJS(action.active));
+    }
+    else if (action.type === `SET_ROVER`) {
+        return state.setIn([`rovers`, `${state.get(`active`)}`], Immutable.fromJS(action.roverInfo));
+    }
+    else {
+        return state;
     }
 };
 const render = async (state) => {
