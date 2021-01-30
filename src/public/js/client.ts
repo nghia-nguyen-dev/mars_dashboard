@@ -1,36 +1,17 @@
 const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
-const { Map } = Immutable;
 
 // global state
-const store:Store = Map({
-	rovers: Map({
+const store = Immutable.fromJS({
+	rovers: {
         curiosity: null,
         opportunity: null,
         spirit: null,
-    }),
+    },
 	active: null,
 });
 
-// INTERFACE
-interface Rover {
-	landing_date: string;
-	launch_date: string;
-	status: string;
-	photo_date: string;
-	name: string;
-}
-
-interface Store {
-	rovers: {
-        curiosity: null | { latest_photos: []};
-        opportunity: null | { latest_photos: []};
-        spirit: null | { latest_photos: []};
-    };
-	active: null | string;
-}
-
-const fetchData = (state:Store):void => {
+const fetchData = (state):void => {
 
 	const options = {
 		method: "POST",
@@ -66,12 +47,15 @@ const cb = (e):void => {
     }
 };
 
-const updateStore = (prevState:Store, newState:Store) => {
-    prevState = Immutable.fromJS(prevState) // convert back to Immutable
-	const currentState = prevState.mergeDeep(newState).toJS(); // convert back to raw JS objects after merge
-    render(currentState);
+const updateStore = (state, action) => {
     
-    return currentState; 
+    switch(action.type) {
+        case `SET_ACTIVE`:
+            return state.set(`active`, Immutable.fromJS(action.active));
+        case `SET_ROVER`:
+            return state.set([`rovers`,`${action.active}`], Immutable.fromJS(action.roverInfo))
+    };
+
 };
 
 const render = async (state:Store) => {

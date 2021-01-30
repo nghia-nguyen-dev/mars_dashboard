@@ -1,14 +1,13 @@
 "use strict";
 const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
-const { Map } = Immutable;
 // global state
-const store = Map({
-    rovers: Map({
+const store = Immutable.fromJS({
+    rovers: {
         curiosity: null,
         opportunity: null,
         spirit: null,
-    }),
+    },
     active: null,
 });
 const fetchData = (state) => {
@@ -42,11 +41,14 @@ const cb = (e) => {
         fetchData(currentState);
     }
 };
-const updateStore = (prevState, newState) => {
-    prevState = Immutable.fromJS(prevState); // convert back to Immutable
-    const currentState = prevState.mergeDeep(newState).toJS(); // convert back to raw JS objects after merge
-    render(currentState);
-    return currentState;
+const updateStore = (state, action) => {
+    switch (action.type) {
+        case `SET_ACTIVE`:
+            return state.set(`active`, Immutable.fromJS(action.active));
+        case `SET_ROVER`:
+            return state.set([`rovers`, `${action.active}`], Immutable.fromJS(action.roverInfo));
+    }
+    ;
 };
 const render = async (state) => {
     root.innerHTML = App(state);
