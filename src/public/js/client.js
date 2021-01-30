@@ -4,11 +4,11 @@ const rovers = document.querySelector(".rovers");
 // global state
 const store = Immutable.fromJS({
     rovers: {
-        curiosity: null,
-        opportunity: null,
-        spirit: null,
+        curiosity: {},
+        opportunity: {},
+        spirit: {},
     },
-    active: null,
+    active: ``,
 });
 const fetchData = (state) => {
     const options = {
@@ -37,13 +37,14 @@ const updateStore = (state, action) => {
         return state.set(`active`, Immutable.fromJS(action.active));
     }
     else if (action.type === `SET_ROVER`) {
+        console.log(action.roverInfo);
         return state.setIn([`rovers`, `${state.get(`active`)}`], Immutable.fromJS(action.roverInfo));
     }
     else {
         return state;
     }
 };
-const render = async (state) => {
+const render = (state) => {
     root.innerHTML = App(state);
 };
 const buildImgTag = (state) => {
@@ -67,6 +68,7 @@ const buildInfoTag = (state) => {
     `;
 };
 const App = (state) => {
+    console.log(state.toJS());
     return `
         <section>
             ${buildInfoTag(state)}

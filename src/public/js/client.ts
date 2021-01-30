@@ -1,17 +1,41 @@
 const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
 
+// Interface
+interface State {
+    rovers: {
+        curiosity: {
+            latest_photos:{}[];
+        };
+        opportunity: {
+            latest_photos:{}[];
+        };
+        spirit: {
+            latest_photos:{}[];
+        };
+    };
+    active: string;
+}
+
+interface Action {
+    active?: string;
+    type: string;
+    roverInfo?: {
+        latest_photos: {}[];
+    };
+}
+
 // global state
-const store = Immutable.fromJS({
+const store:State = Immutable.fromJS({
 	rovers: {
-		curiosity: null,
-		opportunity: null,
-		spirit: null,
+		curiosity: {},
+		opportunity: {},
+		spirit: {},
 	},
-	active: null,
+	active: ``,
 });
 
-const fetchData = (state): void => {
+const fetchData = (state: State): void => {
 	const options = {
 		method: "POST",
 		credentials: "same-origin",
@@ -29,32 +53,32 @@ const fetchData = (state): void => {
 		.catch((err) => console.log(err));
 };
 
-const main = (e) => {
+const main = (e):void => {
 	const roverName = e.target.dataset.rover;
 	const state = updateStore(store, { active: roverName, type: `SET_ACTIVE` });
 
 	fetchData(state);
 };
 
-const updateStore = (state, action) => {
-	// Both set() + setIn() returns a new MAP object
+const updateStore = (state: State, action: Action): State => {
 
+	// Both set() + setIn() returns a new MAP object
     if (action.type === `SET_ACTIVE`) {
         return state.set(`active`, Immutable.fromJS(action.active));
     } else if (action.type === `SET_ROVER`) {
+        console.log(action.roverInfo);
         return state.setIn([`rovers`, `${state.get(`active`)}`], Immutable.fromJS(action.roverInfo));
     } else {
         return state;
     }
 };
 
-const render = async (state: Store) => {
+const render = (state: State):void => {
 	root.innerHTML = App(state);
 };
 
-const buildImgTag = (state: Store): string => {
+const buildImgTag = (state: State): string => {
 	state = state.toJS();
-
 	// Destructuring to pull out latest_photos array
 	const {
 		rovers: {
@@ -62,12 +86,12 @@ const buildImgTag = (state: Store): string => {
 		},
     } = state;
 
-	return latest_photos.reduce((accumulator, currentPhoto) => {
+	return latest_photos.reduce((accumulator: string, currentPhoto: { img_src:string } ) => {
 		return accumulator + `<img src="${currentPhoto.img_src}">`;
 	}, ``); // initialize with empty string!!!
 };
 
-const buildInfoTag = (state) => {
+const buildInfoTag = (state: State) => {
 	state = state.toJS();
 	// Destructuring to pull out 1st item in the latest_photos array
 	const {
@@ -87,7 +111,8 @@ const buildInfoTag = (state) => {
     `;
 };
 
-const App = (state) => {
+const App = (state: State) => {
+    console.log(state.toJS());
 	return `
         <section>
             ${buildInfoTag(state)}
@@ -97,6 +122,6 @@ const App = (state) => {
 };
 
 // Listeners
-window.addEventListener("load", () => {
+window.addEventListener("load", ():void => {
 	rovers.addEventListener("click", main);
 });
