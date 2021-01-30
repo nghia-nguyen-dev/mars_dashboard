@@ -4,15 +4,14 @@ const rovers = document.querySelector(".rovers");
 // global state
 const store = Immutable.fromJS({
 	rovers: {
-        curiosity: null,
-        opportunity: null,
-        spirit: null,
-    },
+		curiosity: null,
+		opportunity: null,
+		spirit: null,
+	},
 	active: null,
 });
 
-const fetchData = (state):void => {
-
+const fetchData = (state): void => {
 	const options = {
 		method: "POST",
 		credentials: "same-origin",
@@ -22,79 +21,64 @@ const fetchData = (state):void => {
 		body: JSON.stringify(state), // Body data type must match "Content-Type" header
 	};
 
-    fetch(`http://localhost:3000/rover`, options)
-    .then((res) => res.json())
-    .then((data) => {
-        render(updateStore(state, {roverInfo: data, type:`SET_ROVER`}));
-    })
-    .catch((err) => console.log(err));
+	fetch(`http://localhost:3000/rover`, options)
+		.then((res) => res.json())
+		.then((data) => {
+			render(updateStore(state, { roverInfo: data, type: `SET_ROVER` }));
+		})
+		.catch((err) => console.log(err));
 };
 
-const cb = (e) => {
+const main = (e) => {
+	const roverName = e.target.dataset.rover;
+	const state = updateStore(store, { active: roverName, type: `SET_ACTIVE` });
 
-    const roverName = e.target.dataset.rover;
-    const state = updateStore(store, { active: roverName, type: `SET_ACTIVE` })
-
-    console.log(state.toJS());
-
-    fetchData(state)
-
-    // Check if rover info already exist to avoid unecessary fetching
-	// if (state.rovers[roverName] !== null) {
-	// 	render(state);
-	// } else {
-	// 	fetchData(state);
-    // }
+	fetchData(state);
 };
-
-const getPropsInMap = (state) => {
-    return 
-}
 
 const updateStore = (state, action) => {
-    
-    switch(action.type) {
-        case `SET_ACTIVE`:
-            return state.set(`active`, Immutable.fromJS(action.active));
-        case `SET_ROVER`:
-            return state.set([`rovers`,`${action.active}`], Immutable.fromJS(action.roverInfo))
-    };
-
+	// Both set() + setIn() returns a new MAP object
+	switch (action.type) {
+		case `SET_ACTIVE`:
+			return state.set(`active`, Immutable.fromJS(action.active));
+		case `SET_ROVER`:
+			return state.setIn(
+				[`rovers`, `${state.get(`active`)}`],
+				Immutable.fromJS(action.roverInfo)
+			);
+	}
 };
 
-const render = async (state:Store) => {
+const render = async (state: Store) => {
 	root.innerHTML = App(state);
 };
 
 const buildImgTag = (state: Store): string => {
-    // Destructuring to pull out latest_photos array
-    const {
-        rovers: {
-            [state.active]: {
-                latest_photos: photos
-            }
-        }
+	state = state.toJS();
+
+	// Destructuring to pull out latest_photos array
+	const {
+		rovers: {
+			[state.active]: { latest_photos },
+		},
     } = state;
 
-
-	return photos.reduce((accumulator, currentPhoto) => {
+	return latest_photos.reduce((accumulator, currentPhoto) => {
 		return accumulator + `<img src="${currentPhoto.img_src}">`;
-    }, ``); // initialize with empty string!!!
-    
+	}, ``); // initialize with empty string!!!
 };
 
-const buildInfoTag = (state: Store): string => {
-    // Destructuring to pull out 1st item in the latest_photos array
-    const {
-        rovers: {
-            [state.active]: {
-                latest_photos: [
-                    roverInfo
-                ]
-            }
-        }
-    } = state;
-    
+const buildInfoTag = (state) => {
+	state = state.toJS();
+	// Destructuring to pull out 1st item in the latest_photos array
+	const {
+		rovers: {
+			[state.active]: {
+				latest_photos: [roverInfo],
+			},
+		},
+	} = state;
+
 	return `
         <h2>${state.active}</h2>
         <p>Status: ${roverInfo.rover.status}</p>
@@ -104,75 +88,16 @@ const buildInfoTag = (state: Store): string => {
     `;
 };
 
-const App = (state:Store):string | undefined => {
-    const { rovers } = state;
-
-    const allAreNull = Object.values(rovers).reduce((accumulator, currentVal) => {
-        if (currentVal !== null) {
-            accumulator = false;
-        }
-        return accumulator
-    }, true)
-
-    // Check for null data
-    if (allAreNull) {
-        return;
-    } else {
-        return `
-            <section>
-                ${buildInfoTag(state)}
-                ${buildImgTag(state)}
-            </section>
-        `;
-    }
-
+const App = (state) => {
+	return `
+        <section>
+            ${buildInfoTag(state)}
+            ${buildImgTag(state)}
+        </section>
+    `;
 };
 
 // Listeners
 window.addEventListener("load", () => {
-	// render(root, store)
+	rovers.addEventListener("click", main);
 });
-
-rovers.addEventListener("click", cb);
-
-// ------------------------------------------------------  COMPONENTS
-
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-	if (name) {
-		return `
-            <h1>Welcome, ${name}!</h1>
-        `;
-	}
-
-	return `
-        <h1>Hello!</h1>
-    `;
-};
-
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
-	// If image does not already exist, or it is not from today -- request it again
-	const today = new Date();
-	const photodate = new Date(apod.date);
-	console.log(photodate.getDate(), today.getDate());
-
-	console.log(photodate.getDate() === today.getDate());
-	if (!apod || apod.date === today.getDate()) {
-		getImageOfTheDay(store);
-	}
-
-	// check if the photo of the day is actually type video!
-	if (apod.media_type === "video") {
-		return `
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `;
-	} else {
-		return `
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `;
-	}
-};
