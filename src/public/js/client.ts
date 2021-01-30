@@ -103,7 +103,6 @@ const buildInfoTag = (state: State) => {
 	} = state;
 
 	return `
-        <h2>${state.active}</h2>
         <p>Status: ${roverInfo.rover.status}</p>
         <p>Date of photos: ${roverInfo.earth_date}</p>
         <p>Launch date: ${roverInfo.rover.launch_date}</p>
