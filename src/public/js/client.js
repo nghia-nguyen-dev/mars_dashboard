@@ -85,9 +85,9 @@ const buildInfoTag = (state) => {
     const { rovers: { [state.active]: { latest_photos: [roverInfo], }, }, } = state;
     return `
         <p>Status: <span class="status">${roverInfo.rover.status}</span</p>
-        <p>Date of photos: <span class="dim-txt">${roverInfo.earth_date}</span></p>
-        <p>Launch date: <span class="dim-txt">${roverInfo.rover.launch_date}</span></p>
-        <p>Landing date: <span class="dim-txt">${roverInfo.rover.landing_date}</span></p>
+        <p>Date of photos: <span class="dim-txt">${convertDateFormat(roverInfo.earth_date)}</span></p>
+        <p>Launch date: <span class="dim-txt">${convertDateFormat(roverInfo.rover.launch_date)}</span></p>
+        <p>Landing date: <span class="dim-txt">${convertDateFormat(roverInfo.rover.landing_date)}</span></p>
     `;
 };
 // --------------------------------------------- Listeners
