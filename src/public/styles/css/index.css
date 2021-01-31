@@ -42,7 +42,7 @@ h1 {
 
 [data-rover] {
   padding-left: 6px;
-  padding-bottom: 2px;
+  padding: 4px 0;
   border: 0.5px solid #eed7b4;
 }
 [data-rover]:nth-child(1), [data-rover]:nth-child(2) {
