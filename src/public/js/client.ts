@@ -119,6 +119,11 @@ const buildInfoTag = (state: State) => {
 
 };
 
+const convertDateFormat = (date: string) => {
+    const dateArr = date.split(`-`);
+    return `${dateArr[1]}-${dateArr[2]}-${dateArr[0]}`
+}
+
 const App = (state: State) => {
     console.log(state.toJS());
 	return `
@@ -137,3 +142,4 @@ const App = (state: State) => {
 window.addEventListener("load", ():void => {
 	rovers.addEventListener("click", main);
 });
+

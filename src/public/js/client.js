@@ -71,6 +71,10 @@ const buildInfoTag = (state) => {
         <p>Landing date: <span class="dim-txt">${roverInfo.rover.landing_date}</span></p>
     `;
 };
+const convertDateFormat = (date) => {
+    const dateArr = date.split(`-`);
+    return `${dateArr[1]}-${dateArr[2]}-${dateArr[0]}`;
+};
 const App = (state) => {
     console.log(state.toJS());
     return `
