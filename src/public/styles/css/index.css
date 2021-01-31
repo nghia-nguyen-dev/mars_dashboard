@@ -70,7 +70,7 @@ section {
 
 .rover-images {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   margin-top: 12px;
   border-top: 0.5px solid #eed7b4;
 }
@@ -119,6 +119,10 @@ footer {
     width: 100%;
   }
 
+  .rover-images {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+
   [data-rover] {
     flex-grow: 1;
   }
@@ -128,6 +132,10 @@ footer {
 }
 /* -------------------  DESKTOP  -------------------- */
 @media (min-width: 1224px) {
+  .rover-images {
+    grid-template-columns: repeat(auto-fill, minmax(650px, 1fr));
+  }
+
   body {
     padding-top: 106px;
   }
