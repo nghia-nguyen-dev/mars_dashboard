@@ -53,7 +53,14 @@ const fetchData = (state: State): void => {
 		.catch((err) => console.log(err));
 };
 
+const removeActiveClass = () => {
+    document.querySelector('.active')?.classList.remove('active')
+}
+
 const main = (e):void => {
+    removeActiveClass()
+    e.target.classList.add(`active`)
+
 	const roverName = e.target.dataset.rover;
 	const state = updateStore(store, { active: roverName, type: `SET_ACTIVE` });
 
