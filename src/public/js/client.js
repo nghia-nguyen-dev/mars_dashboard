@@ -75,7 +75,9 @@ const App = (state) => {
     console.log(state.toJS());
     return `
         <section>
+        <div class="details">
             ${buildInfoTag(state)}
+        </div>
             <div class="rover-images">
                 ${buildImgTag(state)}
             </div>
