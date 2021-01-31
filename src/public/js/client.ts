@@ -112,9 +112,9 @@ const buildInfoTag = (state: State) => {
 
 	return `
         <p>Status: <span class="status">${roverInfo.rover.status}</span</p>
-        <p>Date of photos: ${roverInfo.earth_date}</p>
-        <p>Launch date: ${roverInfo.rover.launch_date}</p>
-        <p>Landing date: ${roverInfo.rover.landing_date}</p>
+        <p>Date of photos: <span class="dim-txt">${roverInfo.earth_date}</span></p>
+        <p>Launch date: <span class="dim-txt">${roverInfo.rover.launch_date}</span></p>
+        <p>Landing date: <span class="dim-txt">${roverInfo.rover.landing_date}</span></p>
     `;
 
 };
