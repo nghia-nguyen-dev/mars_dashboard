@@ -56,7 +56,7 @@ const fetchData = (state: State): void => {
 
 // --------------------------------------------- Helper f
 const removeActiveClass = () => {
-    document.querySelector('.active')?.classList.remove('active')
+    document.querySelector('.active')?.classList.remove('active');
 }
 
 const convertDateFormat = (date: string) => {
@@ -66,6 +66,7 @@ const convertDateFormat = (date: string) => {
 
 // --------------------------------------------- Main
 const main = (e):void => {
+    debugger
     removeActiveClass()
     e.target.classList.add(`active`)
 
