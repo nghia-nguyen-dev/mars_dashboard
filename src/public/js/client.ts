@@ -145,4 +145,3 @@ const buildInfoTag = (state: State) => {
 window.addEventListener("load", ():void => {
 	rovers.addEventListener("click", main);
 });
-

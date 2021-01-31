@@ -32,7 +32,7 @@ body {
   font-family: "Space Mono", monospace;
   font-weight: 400;
   min-height: 100vh;
-  color: #eee1c3;
+  color: #eed7b4;
   background-color: #201f28;
 }
 
@@ -43,21 +43,21 @@ h1 {
 [data-rover] {
   padding-left: 6px;
   padding-bottom: 2px;
-  border: 0.5px solid #eee1c3;
+  border: 0.5px solid #eed7b4;
 }
 [data-rover]:nth-child(1), [data-rover]:nth-child(2) {
   border-bottom: none;
 }
 [data-rover]:hover {
   cursor: pointer;
-  background-color: #eee1c3;
+  background-color: #eed7b4;
   color: #201f28;
 }
 
 main {
   margin-top: 48px;
-  border: 0.5px solid #eee1c3;
-  border-top: 1px solid #eee1c3;
+  border: 0.5px solid #eed7b4;
+  border-top: 0.5px solid #eed7b4;
 }
 
 section {
@@ -72,10 +72,11 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
   margin-top: 12px;
+  border-top: 0.5px solid #eed7b4;
 }
 
 img {
-  border: 0.5px solid #eee1c3;
+  border: 0.5px solid #eed7b4;
   width: 100%;
 }
 
@@ -84,12 +85,12 @@ footer {
 }
 
 .active {
-  background-color: #eee1c3;
+  background-color: #eed7b4;
   color: #201f28;
 }
 
 .status {
-  color: #ffc94d;
+  color: #f0c17a;
 }
 
 .dim-txt {
@@ -122,7 +123,7 @@ footer {
     flex-grow: 1;
   }
   [data-rover]:nth-child(1), [data-rover]:nth-child(2) {
-    border-bottom: 0.5px solid #eee1c3;
+    border-bottom: 0.5px solid #eed7b4;
   }
 }
 /* -------------------  DESKTOP  -------------------- */
