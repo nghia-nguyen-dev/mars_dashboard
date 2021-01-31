@@ -66,7 +66,6 @@ const convertDateFormat = (date: string) => {
 
 // --------------------------------------------- Main
 const main = (e):void => {
-    debugger
     removeActiveClass()
     e.target.classList.add(`active`)
 

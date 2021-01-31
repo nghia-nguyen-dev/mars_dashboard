@@ -37,7 +37,6 @@ const convertDateFormat = (date) => {
 };
 // --------------------------------------------- Main
 const main = (e) => {
-    debugger;
     removeActiveClass();
     e.target.classList.add(`active`);
     const roverName = e.target.dataset.rover;
