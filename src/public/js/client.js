@@ -60,8 +60,7 @@ const buildInfoTag = (state) => {
     // Destructuring to pull out 1st item in the latest_photos array
     const { rovers: { [state.active]: { latest_photos: [roverInfo], }, }, } = state;
     return `
-        <h2>${state.active}</h2>
-        <p>Status: ${roverInfo.rover.status}</p>
+        <p>Status: <span class="status">${roverInfo.rover.status}</span</p>
         <p>Date of photos: ${roverInfo.earth_date}</p>
         <p>Launch date: ${roverInfo.rover.launch_date}</p>
         <p>Landing date: ${roverInfo.rover.landing_date}</p>
