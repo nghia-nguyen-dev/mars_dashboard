@@ -1,42 +1,128 @@
-@use './resets';
+@import './resets';
+@import './font';
+@import './variables';
 
 /* -------------------  MOBILE  --------------------- */
 
 body {
-  display: flex;
-  flex-direction: column;
-  font-family: Arial;
+  max-width: 1440px;
+  margin: 0 auto;
+  line-height: 1;
+  padding: 36px 16px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
   min-height: 100vh;
-  color: beige;
-  background-color: hsl(240, 5%, 13%);
+  color: $mars-warm;
+  background-color: $space-black;
 }
 
-header {
-  /* header styles */
+h1 {
+  margin-bottom: 16px;
+}
+
+[data-rover] {
+  padding-left: $box-padding;
+  padding-bottom: 2px;
+  border: $border;
+  &:nth-child(1),
+  &:nth-child(2) {
+    border-bottom: none;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: $mars-warm;
+    color: $space-black;
+  }
 }
 
 main {
-  flex: 1;
-  padding: 20px;
+  margin-top: 48px;
+  border: $border;
+  border-top: 1px solid $mars-warm;
+}
+
+section {
+  margin: 6px 0 0 0;
+}
+
+.details {
+  padding-left: $box-padding;
+}
+
+.rover-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  margin-top: 12px;
+}
+
+img {
+  border: $border;
+  width: 100%;
 }
 
 footer {
   /* footer styles */
 }
 
+.active {
+  background-color: $mars-warm;
+  color: $space-black;
+}
+
+.status {
+  color: hsl(42, 100%, 65%);
+}
+
+.dim-txt {
+  opacity: .4;
+}
+
 /* -------------------  TABLET  --------------------- */
+
 @media (min-width: 768px) {
-  /* use mobile */
+  $box-padding: 12px;
+
+  [data-rover],
+  .details {
+     padding-left: $box-padding;
+  }
+
+  body {
+    font-size: 20px;
+    padding: 48px 32px;
+  }
+
+  h1 {
+    font-size: 48px;
+  }
+
+  .rovers {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  [data-rover] {
+    flex-grow: 1;
+    &:nth-child(1),
+    &:nth-child(2) {
+      border-bottom: .5px solid $mars-warm;
+    }
+  }
 }
 
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
-  /* use mobile */
-}
+  body {
+    padding-top: 106px;
+  }
 
-/* -------------------  LARGE SCREENS  -------------- */
+  h1 {
+    letter-spacing: -1px;
+  }
 
-@media (min-width: 1824px) {
-  /* use mobile */
+  main {
+    margin-top: 60px;
+  }
 }

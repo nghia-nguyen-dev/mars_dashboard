@@ -1,7 +1,7 @@
 "use strict";
 const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
-// global state
+// --------------------------------------------- global state
 const store = Immutable.fromJS({
     rovers: {
         curiosity: {},
@@ -10,6 +10,7 @@ const store = Immutable.fromJS({
     },
     active: ``,
 });
+// --------------------------------------------- Fetch API
 const fetchData = (state) => {
     const options = {
         method: "POST",
@@ -26,9 +27,15 @@ const fetchData = (state) => {
     })
         .catch((err) => console.log(err));
 };
+// --------------------------------------------- Helper f
 const removeActiveClass = () => {
     document.querySelector('.active')?.classList.remove('active');
 };
+const convertDateFormat = (date) => {
+    const dateArr = date.split(`-`);
+    return `${dateArr[1]}-${dateArr[2]}-${dateArr[0]}`;
+};
+// --------------------------------------------- Main
 const main = (e) => {
     removeActiveClass();
     e.target.classList.add(`active`);
@@ -42,7 +49,6 @@ const updateStore = (state, action) => {
         return state.set(`active`, Immutable.fromJS(action.active));
     }
     else if (action.type === `SET_ROVER`) {
-        console.log(action.roverInfo);
         return state.setIn([`rovers`, `${state.get(`active`)}`], Immutable.fromJS(action.roverInfo));
     }
     else {
@@ -52,6 +58,19 @@ const updateStore = (state, action) => {
 const render = (state) => {
     root.innerHTML = App(state);
 };
+const App = (state) => {
+    return `
+        <section>
+        <div class="details">
+            ${buildInfoTag(state)}
+        </div>
+            <div class="rover-images">
+                ${buildImgTag(state)}
+            </div>
+        </section>
+    `;
+};
+// --------------------------------------------- Components
 const buildImgTag = (state) => {
     state = state.toJS();
     // Destructuring to pull out latest_photos array
@@ -71,24 +90,7 @@ const buildInfoTag = (state) => {
         <p>Landing date: <span class="dim-txt">${roverInfo.rover.landing_date}</span></p>
     `;
 };
-const convertDateFormat = (date) => {
-    const dateArr = date.split(`-`);
-    return `${dateArr[1]}-${dateArr[2]}-${dateArr[0]}`;
-};
-const App = (state) => {
-    console.log(state.toJS());
-    return `
-        <section>
-        <div class="details">
-            ${buildInfoTag(state)}
-        </div>
-            <div class="rover-images">
-                ${buildImgTag(state)}
-            </div>
-        </section>
-    `;
-};
-// Listeners
+// --------------------------------------------- Listeners
 window.addEventListener("load", () => {
     rovers.addEventListener("click", main);
 });

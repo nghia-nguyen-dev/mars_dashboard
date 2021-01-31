@@ -1,7 +1,7 @@
 const root = document.getElementById("root");
 const rovers = document.querySelector(".rovers");
 
-// Interface
+// --------------------------------------------- Interface
 interface State {
     rovers: {
         curiosity: {
@@ -25,7 +25,7 @@ interface Action {
     };
 }
 
-// global state
+// --------------------------------------------- global state
 const store:State = Immutable.fromJS({
 	rovers: {
 		curiosity: {},
@@ -35,6 +35,7 @@ const store:State = Immutable.fromJS({
 	active: ``,
 });
 
+// --------------------------------------------- Fetch API
 const fetchData = (state: State): void => {
 	const options = {
 		method: "POST",
@@ -53,10 +54,17 @@ const fetchData = (state: State): void => {
 		.catch((err) => console.log(err));
 };
 
+// --------------------------------------------- Helper f
 const removeActiveClass = () => {
     document.querySelector('.active')?.classList.remove('active')
 }
 
+const convertDateFormat = (date: string) => {
+    const dateArr = date.split(`-`);
+    return `${dateArr[1]}-${dateArr[2]}-${dateArr[0]}`
+}
+
+// --------------------------------------------- Main
 const main = (e):void => {
     removeActiveClass()
     e.target.classList.add(`active`)
@@ -73,7 +81,6 @@ const updateStore = (state: State, action: Action): State => {
     if (action.type === `SET_ACTIVE`) {
         return state.set(`active`, Immutable.fromJS(action.active));
     } else if (action.type === `SET_ROVER`) {
-        console.log(action.roverInfo);
         return state.setIn([`rovers`, `${state.get(`active`)}`], Immutable.fromJS(action.roverInfo));
     } else {
         return state;
@@ -83,6 +90,21 @@ const updateStore = (state: State, action: Action): State => {
 const render = (state: State):void => {
 	root.innerHTML = App(state);
 };
+
+const App = (state: State) => {
+	return `
+        <section>
+        <div class="details">
+            ${buildInfoTag(state)}
+        </div>
+            <div class="rover-images">
+                ${buildImgTag(state)}
+            </div>
+        </section>
+    `;
+};
+
+// --------------------------------------------- Components
 
 const buildImgTag = (state: State): string => {
 	state = state.toJS();
@@ -119,26 +141,7 @@ const buildInfoTag = (state: State) => {
 
 };
 
-const convertDateFormat = (date: string) => {
-    const dateArr = date.split(`-`);
-    return `${dateArr[1]}-${dateArr[2]}-${dateArr[0]}`
-}
-
-const App = (state: State) => {
-    console.log(state.toJS());
-	return `
-        <section>
-        <div class="details">
-            ${buildInfoTag(state)}
-        </div>
-            <div class="rover-images">
-                ${buildImgTag(state)}
-            </div>
-        </section>
-    `;
-};
-
-// Listeners
+// --------------------------------------------- Listeners
 window.addEventListener("load", ():void => {
 	rovers.addEventListener("click", main);
 });
