@@ -1,18 +1,18 @@
 "use strict";
-const root = document.getElementById("root");
-const rovers = document.querySelector(".rovers");
+var root = document.getElementById("root");
+var rovers = document.querySelector(".rovers");
 // --------------------------------------------- global state
-const store = Immutable.fromJS({
+var store = Immutable.fromJS({
     rovers: {
         curiosity: {},
         opportunity: {},
         spirit: {},
     },
-    active: ``,
+    active: "",
 });
 // --------------------------------------------- Fetch API
-const fetchData = (state) => {
-    const options = {
+var fetchData = function (state) {
+    var options = {
         method: "POST",
         credentials: "same-origin",
         headers: {
@@ -20,77 +20,64 @@ const fetchData = (state) => {
         },
         body: JSON.stringify(state),
     };
-    fetch(`http://localhost:3000/rover`, options)
-        .then((res) => res.json())
-        .then((data) => {
-        render(updateStore(state, { roverInfo: data, type: `SET_ROVER` }));
+    fetch("http://localhost:3000/rover", options)
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+        render(updateStore(state, { roverInfo: data, type: "SET_ROVER" }));
     })
-        .catch((err) => console.log(err));
+        .catch(function (err) { return console.log(err); });
 };
 // --------------------------------------------- Helper f
-const removeActiveClass = () => {
-    document.querySelector('.active')?.classList.remove('active');
+var removeActiveClass = function () {
+    var _a;
+    (_a = document.querySelector('.active')) === null || _a === void 0 ? void 0 : _a.classList.remove('active');
 };
-const convertDateFormat = (date) => {
-    const dateArr = date.split(`-`);
-    return `${dateArr[1]}-${dateArr[2]}-${dateArr[0]}`;
+var convertDateFormat = function (date) {
+    var dateArr = date.split("-");
+    return dateArr[1] + "-" + dateArr[2] + "-" + dateArr[0];
 };
 // --------------------------------------------- Main
-const main = (e) => {
+var main = function (e) {
     removeActiveClass();
-    e.target.classList.add(`active`);
-    const roverName = e.target.dataset.rover;
-    const state = updateStore(store, { active: roverName, type: `SET_ACTIVE` });
+    e.target.classList.add("active");
+    var roverName = e.target.dataset.rover;
+    var state = updateStore(store, { active: roverName, type: "SET_ACTIVE" });
     fetchData(state);
 };
-const updateStore = (state, action) => {
+var updateStore = function (state, action) {
     // Both set() + setIn() returns a new MAP object
-    if (action.type === `SET_ACTIVE`) {
-        return state.set(`active`, Immutable.fromJS(action.active));
+    if (action.type === "SET_ACTIVE") {
+        return state.set("active", Immutable.fromJS(action.active));
     }
-    else if (action.type === `SET_ROVER`) {
-        return state.setIn([`rovers`, `${state.get(`active`)}`], Immutable.fromJS(action.roverInfo));
+    else if (action.type === "SET_ROVER") {
+        return state.setIn(["rovers", "" + state.get("active")], Immutable.fromJS(action.roverInfo));
     }
     else {
         return state;
     }
 };
-const render = (state) => {
+var render = function (state) {
     root.innerHTML = App(state);
 };
-const App = (state) => {
-    return `
-        <section>
-        <div class="details">
-            ${buildInfoTag(state)}
-        </div>
-            <div class="rover-images">
-                ${buildImgTag(state)}
-            </div>
-        </section>
-    `;
+var App = function (state) {
+    return "\n        <section>\n        <div class=\"details\">\n            " + buildInfoTag(state) + "\n        </div>\n            <div class=\"rover-images\">\n                " + buildImgTag(state) + "\n            </div>\n        </section>\n    ";
 };
 // --------------------------------------------- Components
-const buildImgTag = (state) => {
+var buildImgTag = function (state) {
     state = state.toJS();
     // Destructuring to pull out latest_photos array
-    const { rovers: { [state.active]: { latest_photos }, }, } = state;
-    return latest_photos.reduce((accumulator, currentPhoto) => {
-        return accumulator + `<img src="${currentPhoto.img_src}">`;
-    }, ``); // initialize with empty string!!!
+    var _a = state, _b = state.active, latest_photos = _a.rovers[_b].latest_photos;
+    return latest_photos.reduce(function (accumulator, currentPhoto) {
+        return accumulator + ("<img src=\"" + currentPhoto.img_src + "\">");
+    }, ""); // initialize with empty string!!!
 };
-const buildInfoTag = (state) => {
+var buildInfoTag = function (state) {
     state = state.toJS();
     // Destructuring to pull out 1st item in the latest_photos array
-    const { rovers: { [state.active]: { latest_photos: [roverInfo], }, }, } = state;
-    return `
-        <p>Status: <span class="status">${roverInfo.rover.status}</span</p>
-        <p>Date of photos: <span class="dim-txt">${convertDateFormat(roverInfo.earth_date)}</span></p>
-        <p>Launch date: <span class="dim-txt">${convertDateFormat(roverInfo.rover.launch_date)}</span></p>
-        <p>Landing date: <span class="dim-txt">${convertDateFormat(roverInfo.rover.landing_date)}</span></p>
-    `;
+    var _a = state, _b = state.active, roverInfo = _a.rovers[_b].latest_photos[0];
+    return "\n        <p>Status: <span class=\"status\">" + roverInfo.rover.status + "</span</p>\n        <p>Date of photos: <span class=\"dim-txt\">" + convertDateFormat(roverInfo.earth_date) + "</span></p>\n        <p>Launch date: <span class=\"dim-txt\">" + convertDateFormat(roverInfo.rover.launch_date) + "</span></p>\n        <p>Landing date: <span class=\"dim-txt\">" + convertDateFormat(roverInfo.rover.landing_date) + "</span></p>\n    ";
 };
 // --------------------------------------------- Listeners
-window.addEventListener("load", () => {
+window.addEventListener("load", function () {
     rovers.addEventListener("click", main);
 });
